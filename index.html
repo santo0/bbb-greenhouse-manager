@@ -1,0 +1,291 @@
+<!-- //============================================================================
+// Name        : index.html
+// Author      : Marti and Xavier
+// Version     :
+// Copyright   : All free
+// Description : HTML code for the website
+//============================================================================  -->
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Green House Manager</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/dygraph/2.1.0/dygraph.min.js"></script>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/dygraph/2.1.0/dygraph.min.css" />
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+
+    <script>
+        // Establishing connection with server
+        var socket = io.connect(); /* global io */
+        var tempData = [
+            [new Date(), 20]
+        ];
+        var humiData = [
+            [new Date(), 40]
+        ];
+        var lightData = [
+            [new Date(), 1500]
+        ];
+
+        var gt, gh, gl;
+
+        socket.on('updateMeasurementsData', function(data) {
+            var nData = JSON.parse(data);
+            document.getElementById("temp").innerHTML = nData.temp;
+            document.getElementById("humi").innerHTML = nData.humi;
+            document.getElementById("light").innerHTML = nData.light;
+
+
+            tempData.push([new Date(), nData.temp]);
+            humiData.push([new Date(), nData.humi]);
+            lightData.push([new Date(), nData.light]);
+        });
+
+        //Positioning the switch based on the state given by the server
+        socket.on('updateWindowState', function(state) {
+            if (state == "on") {
+                document.getElementById("windowState").innerHTML = "Open";
+                document.getElementById("windowInput").checked = true;
+            } else if (state == "off") {
+                document.getElementById("windowState").innerHTML = "Closed";
+                document.getElementById("windowInput").checked = false;
+            }
+
+        });
+        //Positioning the heater based on the state given by the server
+        socket.on('updateHeaterState', function(state) {
+            if (state == "on") {
+                document.getElementById("heaterState").innerHTML = "Open";
+                document.getElementById("heaterInput").checked = true;
+            } else if (state == "off") {
+                document.getElementById("heaterState").innerHTML = "Closed";
+                document.getElementById("heaterInput").checked = false;
+            }
+        });
+        //Positioning the range slider based on the state given by the server
+        socket.on('updateLedState', function(value) {
+            document.getElementById("rangeValue").innerHTML = value;
+            document.getElementById("lightInput").value = value;
+        });
+        //Updating the data of the server
+        socket.on('changeAllData', function(data) {
+            var nData = JSON.parse(data);
+
+        });
+
+        //Communicates the change of state of the window to the server
+        function changeWindowState(cb) {
+            var nState;
+            if (cb.checked) {
+                nState = "on";
+            } else {
+                nState = "off";
+            }
+            let sData = {
+                "windowState": nState
+            };
+            socket.emit("changeWindowState", JSON.stringify(sData));
+        }
+        //Communicates the change of state of the heater to the server
+        function changeHeaterState(cb) {
+            var nState;
+            if (cb.checked) {
+                nState = "on";
+            } else {
+                nState = "off";
+            }
+            let sData = {
+                "heaterState": nState
+            };
+            socket.emit("changeHeaterState", JSON.stringify(sData));
+
+        }
+        //Communicates the change of state of the LEDs to the server
+        function changeLedStateRange(value) {
+            let sData = {
+                "ledState": value
+            };
+            socket.emit("changeLedState", JSON.stringify(sData));
+        }
+        //Communicates the new email address input by the user to the server
+        function addEmailNotification() {
+            socket.emit("changeEmail", document.getElementById("input_email").value);
+            document.getElementById("input_email").value = "";
+        }
+
+        //Updates all data at the very beggining of the loading page time
+        window.onload = function() {
+            socket.emit("updateAllData", {});
+        }
+    </script>
+</head>
+
+<body>
+    <div class="header">
+        <h1 class="title">Green House Manager</h1>
+        <h3 class="subtitle">Marti La Rosa Ramos</h3>
+        <h3 class="subtitle">Xavier Nadal Reales</h3>
+    </div>
+    <div class="right">
+
+        <!-- Div containing the values retrieved by the sensors -->
+        <div class="information" id="values">
+            <span>Temperature: </span><span id="temp"></span>
+            <br>
+            <span>Humidity: </span><span id="humi"></span>
+            <br>
+            <span>Light: </span><span id="light"></span>
+        </div>
+
+        <!-- Div containing the elements used to modify the states of the sensors -->
+        <div class="information" id="input">
+            <span class="subtitle">Window:</span>
+            <br>
+            <label class="switch">
+                <input type="checkbox" onclick="changeWindowState(this)" id="windowInput">
+                <span class="slider round"></span>
+            </label>
+            <span class="state" id="windowState">...</span>
+            <br>
+            <div id="divider"></div>
+            <span class="subtitle">Heater:</span>
+
+            <label class="switch">
+                <input type="checkbox" onclick="changeHeaterState(this)" id="heaterInput">
+                <span class="slider round"></span>
+            </label>
+            <span class="state" id="heaterState">...</span>
+            <br>
+
+            <span class="subtitle">Light intensity: </span>
+            <span id="rangeValue">0</span>
+            <Input class="range" type="range" name "" value="0" min="0" max="100" onmouseup="changeLedStateRange(this.value)" onmousemove="rangeSlide(this.value)" id="lightInput"></Input>
+
+        </div>
+
+        <script type="text/javascript">
+            function rangeSlide(value) {
+                document.getElementById('rangeValue').innerHTML = value;
+            }
+        </script>
+
+        <!-- Div containing the email input -->
+
+        <div class="information" id="email">
+            <span>Email:</span>
+            <input type="email" id="input_email">
+            <br>
+            <span>Check this box if you want to receive alerts in your email.</span>
+            <button type="button" onclick="addEmailNotification()">Get notifications on email!</button>
+        </div>
+    </div>
+
+
+    <div class="left">
+        <!-- Div containing the graphs -->
+        <div class="container">
+            <ul class="container__list">
+                <li class="container__item container__item_active" id="default_open">
+                    <span class="container__link">Temperature</span>
+                </li>
+                <li class="container__item">
+                    <span class="container__link">Humidity</span>
+                </li>
+                <li class="container__item">
+                    <span class="container__link">Light</span>
+                </li>
+            </ul>
+            <div class="container__inner">
+                <h2 class="content__subtitle">Temperature</h2>
+                <div id="graphdiv_temp"></div>
+            </div>
+            <script type="text/javascript">
+                // Draw the temperature graph when ready
+                $(document).ready(function() {
+                    gt = new Dygraph(document.getElementById("graphdiv_temp"), tempData, {
+                        drawPoints: true,
+                        showRoller: true,
+                        labels: ['Time', 'Temperature']
+                    });
+                });
+            </script>
+            <div class="container__inner">
+                <h2 class="content__subtitle">Humidity</h2>
+                <div id="graphdiv_humi"></div>
+            </div>
+            <script type="text/javascript">
+                // Draw the humidity graph when ready
+                $(document).ready(function() {
+                    gh = new Dygraph(document.getElementById("graphdiv_humi"), humiData, {
+                        drawPoints: true,
+                        showRoller: true,
+                        labels: ['Time', 'Humidity']
+                    });
+                });
+            </script>
+            <div class="container__inner">
+                <h2 class="content__subtitle">Light</h2>
+                <div id="graphdiv_light"></div>
+            </div>
+            <script type="text/javascript">
+                // Draw the light graph when ready
+                $(document).ready(function() {
+                    gl = new Dygraph(document.getElementById("graphdiv_light"), lightData, {
+                        drawPoints: true,
+                        showRoller: true,
+                        labels: ['Time', 'Light']
+                    });
+                    //Set the interval for updating the values on the graphs
+                    window.intervalId = setInterval(function() {
+                        gt.updateOptions({
+                            'file': tempData
+                        });
+                        gh.updateOptions({
+                            'file': humiData
+                        });
+                        gl.updateOptions({
+                            'file': lightData
+                        });
+                    }, 6000);
+                });
+            </script>
+        </div>
+
+        <!-- JavaScript that implements the functionality of the tabs -->
+        <script type="text/javascript">
+            let tabContent = document.querySelectorAll(".container__inner");
+            let tabItem = document.querySelectorAll(".container__item");
+
+
+            // For each element with class 'container__item'
+            for (let i = 0; i < tabItem.length; i++) {
+
+                // if the element is clicked
+                tabItem[i].addEventListener("click", () => {
+                    // Add to all containers class 'container__inner_hidden'
+                    tabContent.forEach((item) => {
+                        item.classList.add("container__inner_hidden");
+                    });
+                    // Clean all links from class 'container__item_active'
+                    tabItem.forEach((item) => {
+                        item.classList.remove("container__item_active");
+                    });
+
+                    // Make visible correct tab content and add class to item
+                    tabContent[i].classList.remove("container__inner_hidden");
+                    tabItem[i].classList.add("container__item_active");
+                });
+            }
+        </script>
+
+        <script type="text/javascript">
+            // Set the temperature tab to be the first open by default
+            $(document).ready(function() {
+                document.getElementById("default_open").click();
+            });
+        </script>
+    </div>
+    </div>
+</body>

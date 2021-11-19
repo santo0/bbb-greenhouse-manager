@@ -1,0 +1,338 @@
+/*
+//============================================================================
+// Name        : styles.css
+// Author      : Marti and Xavier
+// Version     :
+// Copyright   : All free
+// Description : CSS styling for the website
+//============================================================================
+*/
+
+html,
+body {
+    max-width: 100%;
+    overflow-x: hidden;
+    background-color: #cce6e0;
+}
+
+
+/* Styling the divs containing relevant information */
+
+.information {
+    background-color: #f5f5f5;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: rgb(33 35 38 / 10%) 0 20px 15px -10px;
+    margin: 30px;
+    width: fit-content;
+    color: #4c6067;
+    min-height: 30px;
+    border-radius: 3px;
+    justify-content: center;
+    align-content: center;
+    cursor: pointer;
+    position: relative;
+    font-size: 16px;
+    line-height: 16px;
+    letter-spacing: 1px;
+    font-weight: 400;
+    transition: 0.2s;
+    border-radius: 10px;
+    box-sizing: border-box;
+}
+
+
+/*Styling the h1 title*/
+
+.title {
+    margin: 30px 0;
+    padding: 0;
+    color: #4c6067;
+    font-size: 36px;
+    line-height: 36px;
+    letter-spacing: 1px;
+    font-weight: 700;
+    text-rendering: optimizeLegibility;
+}
+
+
+/*Styling the names of the authors of the page */
+
+.subtitle {
+    padding: 0;
+    font-size: 20px;
+    line-height: 20px;
+    letter-spacing: 1px;
+    font-weight: 700;
+    text-rendering: optimizeLegibility;
+}
+
+
+/* Position of the title and the authors */
+
+.header {
+    position: relative;
+    top: 20px;
+    left: 100px;
+}
+
+
+/* Position of the div containing the elements on the right */
+
+.right {
+    width: 40%;
+    float: right;
+}
+
+
+/* Position of the div containing the elements on the left */
+
+.left {
+    width: 60%;
+    float: left;
+}
+
+.full_page {
+    margin-left: 0px;
+}
+
+.state {
+    margin-top: 10px;
+    margin-left: 5px;
+}
+
+
+/* Specific styling of each div containing information */
+
+#values {
+    font-size: 28px;
+    line-height: 50px;
+    letter-spacing: 1px;
+}
+
+#input {
+    display: grid;
+    justify-items: start;
+}
+
+#input_email {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+#email {
+    display: grid;
+    justify-items: start;
+}
+
+
+/* Styling of the switches from the input div */
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+    margin-top: 6px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+
+/* Styling the range slider */
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: 0.4s;
+    transition: 0.4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: 0.4s;
+    transition: 0.4s;
+}
+
+input:checked+.slider {
+    background-color: #4c6067;
+}
+
+input:focus+.slider {
+    box-shadow: 0 0 1px #2196f3;
+}
+
+input:checked+.slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+}
+
+
+/* Rounded sliders */
+
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+.range {
+    width: 400px;
+    height: 15px;
+    -webkit-appearance: none;
+    background: #111;
+    outline: none;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 1);
+}
+
+#rangeValue {
+    justify-self: center;
+}
+
+.range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: #f3f3f3;
+    cursor: pointer;
+    border: 4px solid #333;
+    box-shadow: -407px 0 0 400px #ffc107;
+}
+
+
+/* Styling of the div that contains the graphs */
+
+.container {
+    width: 100%;
+    min-height: 270px;
+    max-width: 850px;
+    background: #f5f5f5;
+    border-radius: 10px;
+    padding: 20px;
+    box-sizing: border-box;
+    box-shadow: rgba(33, 35, 38, 0.1) 0 10px 10px -10px;
+    margin: 80px;
+    margin-top: 80px;
+}
+
+.container__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-rows: repeat(1, minmax(min-content, max-content));
+    grid-template-columns: repeat(5, minmax(min-content, max-content));
+    grid-auto-rows: minmax(min-content, max-content);
+    grid-auto-columns: minmax(min-content, max-content);
+    justify-content: space-around;
+    gap: 10px 20px;
+}
+
+.container__item {
+    width: 100px;
+    color: #4c6067;
+    min-height: 30px;
+    border-radius: 3px;
+    display: grid;
+    justify-content: center;
+    align-content: center;
+    cursor: pointer;
+    position: relative;
+    font-size: 16px;
+    line-height: 16px;
+    letter-spacing: 1px;
+    font-weight: 400;
+    transition: 0.2s;
+}
+
+.container__item::after {
+    content: "";
+    display: block;
+    position: absolute;
+    width: 40%;
+    margin: 0 30%;
+    bottom: 0;
+    border-bottom: 1px solid #4c6067;
+}
+
+.container__item_active {
+    background: #4c6067;
+    box-sizing: border-box;
+    color: #ebfaff;
+    font-weight: 300;
+}
+
+.container__link {
+    margin: 0;
+    padding: 0;
+}
+
+.container__inner {
+    width: 80%;
+    margin: 45px auto 35px;
+}
+
+.content__subtitle {
+    animation-name: smoothTop;
+    animation-duration: 0.3s;
+    font-size: 22px;
+    line-height: 22px;
+    font-weight: 500;
+    color: #404648;
+}
+
+.content__description {
+    animation-name: smoothBottom;
+    animation-duration: 0.7s;
+    font-size: 14px;
+    line-height: 22px;
+    font-weight: 300;
+    color: #404648;
+}
+
+.container__inner_hidden {
+    display: none;
+}
+
+@keyframes smoothTop {
+    0% {
+        opacity: 0.2;
+        transform: translateY(7%);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0%);
+    }
+}
+
+@keyframes smoothBottom {
+    0% {
+        opacity: 0.2;
+        transform: translateY(-3%);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0%);
+    }
+}
